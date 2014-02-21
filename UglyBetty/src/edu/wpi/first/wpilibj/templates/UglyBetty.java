@@ -25,7 +25,7 @@ import edu.wpi.first.wpilibj.templates.subsystems.Vision;
  * creating this project, you must also update the manifest file in the resource
  * directory.
  */
-public class SPIKE extends IterativeRobot {
+public class UglyBetty extends IterativeRobot {
 
     boolean hasFired;
     DriverStationLCD LCD = DriverStationLCD.getInstance();
