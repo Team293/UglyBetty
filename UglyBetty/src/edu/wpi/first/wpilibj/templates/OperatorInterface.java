@@ -6,9 +6,7 @@
 package edu.wpi.first.wpilibj.templates;
 
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.buttons.SpikeButton;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.templates.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj.templates.subsystems.Feeder;
 import edu.wpi.first.wpilibj.templates.subsystems.ShooterRack;
@@ -29,6 +27,7 @@ public class OperatorInterface {
             toggleDriveDirection = new SpikeButton(rightJoystick, Ports.toggleDriveDirection),
             setToHighRPM = new SpikeButton(gamepad, Ports.setToHighRPM),
             toggleShooters = new SpikeButton(gamepad, Ports.toggleShooter),
+            temp = new SpikeButton(gamepad, 3),
             setToLowRPM = new SpikeButton(gamepad, Ports.setToLowRPM);
 
     public static void controlDriveTrain() {
@@ -58,6 +57,7 @@ public class OperatorInterface {
     }
 
     public static void controlFeeder() {
+        ShooterRack.enableLowWheel();
         if (fire.getClick()) {
             ShooterRack.startShooting();
         }
@@ -71,16 +71,9 @@ public class OperatorInterface {
                 if (!Feeder.possessing()) {
                     //feed
                     Feeder.feed();
-                    ShooterRack.disableLowWheel();
                 } else {
                     //stop on posess
-                    if (Feeder.overFed()) {
-                        ShooterRack.disableLowWheel();
-                        Feeder.feeder2.set(Relay.Value.kForward);
-                    } else {
-                        Feeder.stop();
-                        ShooterRack.enableLowWheel();
-                    }
+                    Feeder.stop();
                 }
             } else {
                 //toggle off
@@ -92,9 +85,8 @@ public class OperatorInterface {
             Feeder.feed();
             if (!Feeder.possessing()) {
                 //stop firing
-                ShooterRack.disableLowWheel();
                 ShooterRack.finishedShooting();
-                toggleFeeder.setState(false);
+                toggleFeeder.setState(true);
                 Feeder.triggerEnabled();
             }
         }
