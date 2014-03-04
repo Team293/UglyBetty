@@ -50,6 +50,7 @@ public class UglyBetty extends IterativeRobot {
 
     public void autonomousInit() {
         autoTimer.start();
+        autoTimer.reset();
         Cage.release();
         gyro.reset();
         hasFired = false;
@@ -62,7 +63,7 @@ public class UglyBetty extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     boolean isTiming = false;
-    double stopTime = 3.3;
+    double stopTime = 3;
 
     public void autonomousPeriodic() {
         //make sure you have a ball
@@ -103,7 +104,7 @@ public class UglyBetty extends IterativeRobot {
                 if (t.get() < stopTime - 1) {
                     driveStraight(-0.75);
                 } else {
-                    driveStraight(-0.4);
+                    driveStraight(-0.2);
                 }
                 Feeder.triggerEnabled();
                 Feeder.stop();
