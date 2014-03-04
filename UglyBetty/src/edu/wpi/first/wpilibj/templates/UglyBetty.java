@@ -30,7 +30,7 @@ public class UglyBetty extends IterativeRobot {
     boolean hasFired;
     DriverStationLCD LCD = DriverStationLCD.getInstance();
     final Gyro gyro = new Gyro(Ports.gyro);
-    private static final double kStraight = 0.083;
+    private static final double kStraight = 0.085;
     Timer t = new Timer();
     
     /**
@@ -52,14 +52,13 @@ public class UglyBetty extends IterativeRobot {
         gyro.reset();
         hasFired = false;
         t.reset();
-        t.stop();
     }
 
     /**
      * This function is called periodically during autonomous
      */
     boolean isTiming = false;
-    double stopTime = 3.2;
+    double stopTime = 2.25;
 
     public void autonomousPeriodic() {
         //make sure you have a ball
@@ -92,9 +91,9 @@ public class UglyBetty extends IterativeRobot {
             if (t.get() < stopTime && !ShooterRack.isShooting()) {
                 SmartDashboard.putString("debugging", "moving forward");
                 if (t.get() < stopTime - 1) {
-                    driveStraight(-0.75);
+                    driveStraight(0.7);
                 } else {
-                    driveStraight(-0.4);
+                    driveStraight(0.4);
                 }
                 Feeder.triggerEnabled();
                 Feeder.stop();

@@ -16,7 +16,7 @@ public class ShooterRack {
     private static final Shooter shooterLow = new Shooter(Ports.shooterLow, Ports.shooterLowEncA, Ports.shooterLowEncB);
     private static final Shooter shooterMiddle = new Shooter(Ports.shooterMiddle, Ports.shooterMiddleEncA, Ports.shooterMiddleEncB);
     private static final Shooter shooterHigh = new Shooter(Ports.shooterHigh, Ports.shooterHighEncA, Ports.shooterHighEncB);
-    private static boolean shooting = false, lowWheelEnabled = true;
+    private static boolean shooting = false, lowWheelEnabled = false;
     public static final double shooterDistance = 10; //Random optimum distance from the wall
 
     public static void startShooting() {
