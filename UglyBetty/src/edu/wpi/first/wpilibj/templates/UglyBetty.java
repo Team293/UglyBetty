@@ -32,7 +32,8 @@ public class UglyBetty extends IterativeRobot {
     final Gyro gyro = new Gyro(Ports.gyro);
     private static final double kStraight = 0.083;
     Timer t = new Timer();
-    
+    Timer autoTimer = new Timer();
+
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
@@ -48,9 +49,11 @@ public class UglyBetty extends IterativeRobot {
     }
 
     public void autonomousInit() {
+        autoTimer.start();
         Cage.release();
         gyro.reset();
         hasFired = false;
+        isTiming = false;
         t.reset();
         t.stop();
     }
@@ -59,7 +62,7 @@ public class UglyBetty extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     boolean isTiming = false;
-    double stopTime = 3.2;
+    double stopTime = 3.3;
 
     public void autonomousPeriodic() {
         //make sure you have a ball
@@ -82,6 +85,12 @@ public class UglyBetty extends IterativeRobot {
             //shooting loop 
             SmartDashboard.putNumber("time", t.get());
             if (blobCount == 2 && !hasFired && t.get() >= stopTime) {
+                SmartDashboard.putString("debugging", "starting to fire");
+                hasFired = true;
+                ShooterRack.startShooting();
+                Feeder.triggerDisabled();
+                Feeder.feed();
+            } else if (autoTimer.get() > 9) {
                 SmartDashboard.putString("debugging", "starting to fire");
                 hasFired = true;
                 ShooterRack.startShooting();
