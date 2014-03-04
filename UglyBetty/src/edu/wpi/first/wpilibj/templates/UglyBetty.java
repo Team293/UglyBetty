@@ -50,7 +50,6 @@ public class UglyBetty extends IterativeRobot {
 
     public void autonomousInit() {
         autoTimer.start();
-        autoTimer.reset();
         Cage.release();
         gyro.reset();
         hasFired = false;
@@ -91,7 +90,7 @@ public class UglyBetty extends IterativeRobot {
                 ShooterRack.startShooting();
                 Feeder.triggerDisabled();
                 Feeder.feed();
-            } else if (autoTimer.get() > 9) {
+            } else if (autoTimer.get() > 8) {
                 SmartDashboard.putString("debugging", "starting to fire");
                 hasFired = true;
                 ShooterRack.startShooting();
