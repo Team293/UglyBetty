@@ -125,7 +125,6 @@ public class UglyBetty extends IterativeRobot {
         OperatorInterface.controlFeeder();
         OperatorInterface.controlAutoAlign();
         OperatorInterface.controlCamera();
-        DriveTrain.rangeUltrasonics();
         LCD.println(DriverStationLCD.Line.kUser1, 1, "" + DriveTrain.getLeftDistance());
         LCD.println(DriverStationLCD.Line.kUser2, 1, "" + DriveTrain.getRightDistance());
 

@@ -28,7 +28,7 @@ public class DriveTrain {
     private static int ping = 0;
 
     public static void tankDrive(double leftMotor, double rightMotor) {
-        drive.tankDrive(leftMotor, -rightMotor);
+        drive.tankDrive(-leftMotor, -rightMotor);
     }
 
     public static void emptyFunction() {
