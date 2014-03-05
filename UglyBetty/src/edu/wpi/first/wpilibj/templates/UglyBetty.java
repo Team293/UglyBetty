@@ -52,7 +52,7 @@ public class UglyBetty extends IterativeRobot {
      */
     public void autonomousPeriodic() {
         //oneBallAuto.run();
-        twoBallAuto.run();
+        twoBallAuto.run2();
     }
 
     /**
