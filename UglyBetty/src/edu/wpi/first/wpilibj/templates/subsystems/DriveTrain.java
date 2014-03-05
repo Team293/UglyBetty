@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.RobotDrive;
 import edu.wpi.first.wpilibj.Victor;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.templates.Ports;
+import java.util.Vector;
 
 /**
  *
@@ -26,6 +27,7 @@ public class DriveTrain {
     static final DigitalOutput ultrasonicSignal = new DigitalOutput(Ports.ultrasonicSignal);
     private static double rightDistance, leftDistance;
     private static int ping = 0;
+    private static double[] val = new double[10];
 
     public static void tankDrive(double leftMotor, double rightMotor) {
         drive.tankDrive(leftMotor, -rightMotor);
@@ -46,6 +48,7 @@ public class DriveTrain {
         }
         leftDistance = convertToDistance(leftUltrasonic.getAverageVoltage());
         rightDistance = convertToDistance(rightUltrasonic.getAverageVoltage());
+        //sensor array stuff
         SmartDashboard.putNumber("leftD", leftDistance);
         SmartDashboard.putNumber("rightD", rightDistance);
     }

@@ -7,16 +7,13 @@
 package edu.wpi.first.wpilibj.templates;
 
 import edu.wpi.first.wpilibj.DriverStationLCD;
-import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.templates.subsystems.Cage;
 import edu.wpi.first.wpilibj.templates.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj.templates.subsystems.Feeder;
 import edu.wpi.first.wpilibj.templates.subsystems.ShooterRack;
-import edu.wpi.first.wpilibj.templates.subsystems.Vision;
+import edu.wpi.first.wpilibj.templates.subsystems.TwoBallAutonomous;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -27,12 +24,9 @@ import edu.wpi.first.wpilibj.templates.subsystems.Vision;
  */
 public class UglyBetty extends IterativeRobot {
 
-    boolean hasFired;
     DriverStationLCD LCD = DriverStationLCD.getInstance();
-    final Gyro gyro = new Gyro(Ports.gyro);
-    private static final double kStraight = 0.083;
-    Timer t = new Timer();
-    Timer autoTimer = new Timer();
+    //OneBallAutonomous oneBallAuto = new OneBallAutonomous();
+    TwoBallAutonomous twoBallAuto = new TwoBallAutonomous();
 
     /**
      * This function is run when the robot is first started up and should be
@@ -49,80 +43,16 @@ public class UglyBetty extends IterativeRobot {
     }
 
     public void autonomousInit() {
-        autoTimer.start();
-        Cage.release();
-        gyro.reset();
-        hasFired = false;
-        isTiming = false;
-        t.reset();
-        t.stop();
+        //oneBallAuto.init();
+        twoBallAuto.init();
     }
 
     /**
      * This function is called periodically during autonomous
      */
-    boolean isTiming = false;
-    double stopTime = 3;
-
     public void autonomousPeriodic() {
-        //make sure you have a ball
-        double blobCount = SmartDashboard.getNumber("blobCount", 0);
-        DriveTrain.rangeUltrasonics();
-        ShooterRack.run();
-        Vision.setServo(0.65);
-        SmartDashboard.putBoolean("hasFired", hasFired);
-        SmartDashboard.putBoolean("possessing", Feeder.possessing());
-        if (!Feeder.possessing() && !hasFired) {
-            SmartDashboard.putString("debugging", "looking for ball...");
-            Feeder.triggerEnabled();
-            Feeder.feed();
-        } else {
-            if (!isTiming) {
-                isTiming = true;
-                t.start();
-            }
-            Feeder.stop();
-            //shooting loop 
-            SmartDashboard.putNumber("time", t.get());
-            if (blobCount == 2 && !hasFired && t.get() >= stopTime) {
-                SmartDashboard.putString("debugging", "starting to fire");
-                hasFired = true;
-                ShooterRack.startShooting();
-                Feeder.triggerDisabled();
-                Feeder.feed();
-            } else if (autoTimer.get() > 8) {
-                SmartDashboard.putString("debugging", "starting to fire");
-                hasFired = true;
-                ShooterRack.startShooting();
-                Feeder.triggerDisabled();
-                Feeder.feed();
-            }
-//            //driving loop
-            if (t.get() < stopTime && !ShooterRack.isShooting()) {
-                SmartDashboard.putString("debugging", "moving forward");
-                if (t.get() < stopTime - 1) {
-                    driveStraight(-0.75);
-                } else {
-                    driveStraight(-0.2);
-                }
-                Feeder.triggerEnabled();
-                Feeder.stop();
-            } else if (ShooterRack.isShooting()) {
-                SmartDashboard.putString("debugging", "firing!!");
-                t.stop();
-                DriveTrain.stop();
-                Feeder.feed();
-                Feeder.triggerDisabled();
-                if (!Feeder.possessing()) {
-                    SmartDashboard.putString("debugging", "resuming");
-                    ShooterRack.finishedShooting();
-                    t.start();
-                }
-            } else {
-                SmartDashboard.putString("debugging", "stopped");
-                DriveTrain.stop();
-            }
-        }
+        //oneBallAuto.run();
+        twoBallAuto.run();
     }
 
     /**
@@ -148,28 +78,4 @@ public class UglyBetty extends IterativeRobot {
     public void testPeriodic() {
         LiveWindow.run();
     }
-
-    public void driveStraight(double speed) {
-        //read the gyro
-        double angle = gyro.getAngle();
-        //calculate motor output
-        SmartDashboard.putNumber("gyro", angle);
-        double rightMotorOutput = speed - kStraight * angle;
-        double leftMotorOutput = speed + kStraight * angle;
-        if (rightMotorOutput > 1) {
-            rightMotorOutput = 1;
-        }
-        if (leftMotorOutput > 1) {
-            leftMotorOutput = 1;
-        }
-        if (rightMotorOutput < -1) {
-            rightMotorOutput = -1;
-        }
-        if (leftMotorOutput < -1) {
-            leftMotorOutput = -1;
-        }
-        //set motor output
-        DriveTrain.tankDrive(-leftMotorOutput, -rightMotorOutput);
-    }
-
 }
