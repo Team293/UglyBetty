@@ -18,9 +18,10 @@ public class TwoBallAutonomous {
 
     boolean hasFired = false, isTiming = false;
     final Gyro gyro;
-    private static final double kStraight = 0.085;
-    double startDriveTime = 0, stopTime1 = 3.4, stopTime2 = 6, driveSpeed1 = -0.85, driveSpeed2 = 0.85;
-    int runCount =1;
+    private static final double kStraight = 0.085, kAlign = 0.09;
+    double startDriveTime = 0, stopTime1 = 2.4, alignTime = 1, stopTime2 = 3, driveSpeed1 = -0.85, driveSpeed2 = 0.85;
+    double commandStartTime = 0;
+    int runCount = 1;
     Timer autoTimer;
 
     public TwoBallAutonomous() {
@@ -35,21 +36,98 @@ public class TwoBallAutonomous {
         ShooterRack.finishedShooting();
         hasFired = false;
         isTiming = false;
+        Feeder.triggerEnabled();
     }
 
-    public void run() {
+    public void run2() {
+        //feed 1
+        while (!Feeder.ballLimit2.get()) {
+            Feeder.feed();
+        }
+        commandStartTime = autoTimer.get();
+        Feeder.stop();
+
+        //move forward 1
+        while (autoTimer.get() - commandStartTime < stopTime1) {
+            driveStraight(driveSpeed1);
+            ShooterRack.run();
+        }
+        commandStartTime = autoTimer.get();
+
+        //align to straight
+        while (autoTimer.get() - commandStartTime < alignTime) {
+            align();
+            ShooterRack.run();
+        }
+        commandStartTime = autoTimer.get();
+
+        //shoot
+        while (Feeder.possessing()) {
+            Feeder.triggerDisabled();
+            Feeder.feed();
+        }
+        commandStartTime = autoTimer.get();
+        Feeder.triggerEnabled();
+        ShooterRack.stop();
+
+        //back up && feed
+        while (!Feeder.possessing()) {
+            driveStraight(driveSpeed2);
+        }
+        DriveTrain.stop();
+        Feeder.stop();
+        commandStartTime = autoTimer.get();
+
+        //move forward 2
+        while (autoTimer.get() - commandStartTime < stopTime2) {
+            driveStraight(driveSpeed1);
+        }
+        DriveTrain.stop();
+
+        //shoot
+        while (Feeder.possessing()) {
+            Feeder.triggerDisabled();
+            Feeder.feed();
+        }
+        Feeder.triggerEnabled();
+        ShooterRack.stop();
+    }
+
+    public void run1() {
         DriveTrain.rangeUltrasonics();
         ShooterRack.run();
         //feed ball
-        if (!Feeder.possessing() && !hasFired) {
+        if (!Feeder.possessing() && !hasFired && (runCount == 1 || runCount == 2)) {
             SmartDashboard.putString("debugging", "looking for ball...");
             Feeder.triggerEnabled();
             Feeder.feed();
-        } else {
+        } else if (Feeder.possessing()) {
             //stop feeder on possession
             Feeder.stop();
-            
+            startDriveTime = autoTimer.get();
+            if (!isTiming) {
+                isTiming = true;
+
+            }
+
+            if (!hasFired &&) {
+
+            }
         }
+    }
+
+    public void align() {
+        double angle = gyro.getAngle();
+        //calculate motor output
+        SmartDashboard.putNumber("gyro", angle);
+        double turnOutput = kAlign * angle;
+        if (turnOutput > 1) {
+            turnOutput = 1;
+        }
+        if (turnOutput > 1) {
+            turnOutput = 1;
+        }
+        DriveTrain.tankDrive(-turnOutput, turnOutput);
     }
 
     public void driveStraight(double speed) {

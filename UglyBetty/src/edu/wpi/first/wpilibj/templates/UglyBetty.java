@@ -51,8 +51,13 @@ public class UglyBetty extends IterativeRobot {
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
+<<<<<<< HEAD
         oneBallAuto.run();
         //twoBallAuto.run();
+=======
+        //oneBallAuto.run();
+        twoBallAuto.run2();
+>>>>>>> 92b770c76a9b57adaac3783fe02ba7576e695a2b
     }
 
     /**
