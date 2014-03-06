@@ -12,8 +12,8 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.templates.subsystems.Cage;
 import edu.wpi.first.wpilibj.templates.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj.templates.subsystems.Feeder;
+import edu.wpi.first.wpilibj.templates.subsystems.OneBallAutonomous;
 import edu.wpi.first.wpilibj.templates.subsystems.ShooterRack;
-import edu.wpi.first.wpilibj.templates.subsystems.TwoBallAutonomous;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -25,8 +25,8 @@ import edu.wpi.first.wpilibj.templates.subsystems.TwoBallAutonomous;
 public class UglyBetty extends IterativeRobot {
 
     DriverStationLCD LCD = DriverStationLCD.getInstance();
-    //OneBallAutonomous oneBallAuto = new OneBallAutonomous();
-    TwoBallAutonomous twoBallAuto = new TwoBallAutonomous();
+    OneBallAutonomous oneBallAuto = new OneBallAutonomous();
+    //TwoBallAutonomous twoBallAuto = new TwoBallAutonomous();
 
     /**
      * This function is run when the robot is first started up and should be
@@ -43,16 +43,16 @@ public class UglyBetty extends IterativeRobot {
     }
 
     public void autonomousInit() {
-        //oneBallAuto.init();
-        twoBallAuto.init();
+        oneBallAuto.init();
+        //twoBallAuto.init();
     }
 
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-        //oneBallAuto.run();
-        twoBallAuto.run();
+        oneBallAuto.run();
+        //twoBallAuto.run();
     }
 
     /**
