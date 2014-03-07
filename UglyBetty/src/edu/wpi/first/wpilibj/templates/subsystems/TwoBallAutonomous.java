@@ -18,8 +18,14 @@ public class TwoBallAutonomous {
 
     boolean hasFired = false, isTiming = false;
     final Gyro gyro;
-    private static final double kStraight = 0.085, kAlign = 0.09;
-    double startDriveTime = 0, stopTime1 = 2.4, alignTime = 1, stopTime2 = 3, driveSpeed1 = -0.85, driveSpeed2 = 0.85;
+    private static final double kStraight = 0.085, kAlign = 0.089;
+    double startDriveTime = 0,
+            stopTime1 = 2.4,
+            alignTime = 1,
+            stopTime2 = 2.8,
+            searchTime = 2.6,
+            driveSpeed1 = -0.65,
+            driveSpeed2 = 0.45;
     double commandStartTime = 0;
     int runCount = 1;
     Timer autoTimer;
@@ -41,21 +47,34 @@ public class TwoBallAutonomous {
 
     public void run2() {
         //feed 1
+        Feeder.triggerEnabled();
         while (!Feeder.ballLimit2.get()) {
             Feeder.feed();
+            Feeder.triggerEnabled();
+            SmartDashboard.putString("debug..", "feeding");
         }
         commandStartTime = autoTimer.get();
         Feeder.stop();
+        Feeder.triggerEnabled();
 
         //move forward 1
         while (autoTimer.get() - commandStartTime < stopTime1) {
+            SmartDashboard.putString("debug..", "driving forward 1");
+            Feeder.triggerEnabled();
             driveStraight(driveSpeed1);
             ShooterRack.run();
+            if (!Feeder.ballLimit2.get()) {
+                Feeder.feed();
+            } else {
+                Feeder.stop();
+            }
         }
         commandStartTime = autoTimer.get();
+        Feeder.triggerEnabled();
 
         //align to straight
         while (autoTimer.get() - commandStartTime < alignTime) {
+            SmartDashboard.putString("debug..", "aligning");
             align();
             ShooterRack.run();
         }
@@ -63,6 +82,8 @@ public class TwoBallAutonomous {
 
         //shoot
         while (Feeder.possessing()) {
+            SmartDashboard.putString("debug..", "shooting");
+            ShooterRack.run();
             Feeder.triggerDisabled();
             Feeder.feed();
         }
@@ -72,7 +93,10 @@ public class TwoBallAutonomous {
 
         //back up && feed
         while (!Feeder.possessing()) {
-            driveStraight(driveSpeed2);
+            SmartDashboard.putString("debug..", "back up till feed");
+            if (autoTimer.get() - commandStartTime < searchTime) {
+                driveStraight(driveSpeed2);
+            }
         }
         DriveTrain.stop();
         Feeder.stop();
@@ -80,40 +104,33 @@ public class TwoBallAutonomous {
 
         //move forward 2
         while (autoTimer.get() - commandStartTime < stopTime2) {
+            SmartDashboard.putString("debug..", "move forward 2");
             driveStraight(driveSpeed1);
+            if (!Feeder.ballLimit2.get()) {
+                Feeder.feed();
+            } else {
+                Feeder.stop();
+            }
         }
+        commandStartTime = autoTimer.get();
         DriveTrain.stop();
+
+        //align to straight 2
+        while (autoTimer.get() - commandStartTime < alignTime) {
+            SmartDashboard.putString("debug..", "aligning 2");
+            align();
+            ShooterRack.run();
+        }
 
         //shoot
         while (Feeder.possessing()) {
+            ShooterRack.run();
+            SmartDashboard.putString("debug..", "shoot 2");
             Feeder.triggerDisabled();
             Feeder.feed();
         }
         Feeder.triggerEnabled();
         ShooterRack.stop();
-    }
-
-    public void run1() {
-        DriveTrain.rangeUltrasonics();
-        ShooterRack.run();
-        //feed ball
-        if (!Feeder.possessing() && !hasFired && (runCount == 1 || runCount == 2)) {
-            SmartDashboard.putString("debugging", "looking for ball...");
-            Feeder.triggerEnabled();
-            Feeder.feed();
-        } else if (Feeder.possessing()) {
-            //stop feeder on possession
-            Feeder.stop();
-            startDriveTime = autoTimer.get();
-            if (!isTiming) {
-                isTiming = true;
-
-            }
-
-            if (!hasFired &&) {
-
-            }
-        }
     }
 
     public void align() {

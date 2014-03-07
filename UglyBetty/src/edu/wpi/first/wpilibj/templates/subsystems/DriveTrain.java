@@ -25,8 +25,8 @@ public class DriveTrain {
     static final AnalogChannel leftUltrasonic = new AnalogChannel(Ports.leftUltrasonic);
     static final DigitalOutput ultrasonicSignal = new DigitalOutput(Ports.ultrasonicSignal);
     private static double rightDistance, leftDistance;
-    private static int ping = 0;
-    private static double[] val = new double[10];
+    private static int ping = 0, sampleSize = 10;
+    private static double[] val = new double[sampleSize];
 
     public static void tankDrive(double leftMotor, double rightMotor) {
         drive.tankDrive(leftMotor, -rightMotor);
@@ -48,8 +48,18 @@ public class DriveTrain {
         leftDistance = convertToDistance(leftUltrasonic.getAverageVoltage());
         rightDistance = convertToDistance(rightUltrasonic.getAverageVoltage());
         //sensor array stuff
+        for (int i = 0; i < val.length - 2; i++) {
+            val[i] = val[i + 2];
+        }
+        val[sampleSize - 2] = leftDistance;
+        val[sampleSize - 1] = rightDistance;
+
+        sort(val);
+
+        double adjustedDistance = (val[6] + val[7] + val[8] + val[9]) / 4.0;
         SmartDashboard.putNumber("leftD", leftDistance);
         SmartDashboard.putNumber("rightD", rightDistance);
+        SmartDashboard.putNumber("adjustedD", adjustedDistance);
     }
 
     public static double getLeftDistance() {
@@ -85,4 +95,25 @@ public class DriveTrain {
         return (rawVoltage + 0.0056) / 0.1141;
     }
 
+    public static void sort(double[] a) {
+        while (!inOrder(a)) {
+            for (int i = 0; i < a.length; i++) {
+                //if in wrong order, flip
+                if (a[i] > a[i + 1]) {
+                    double temp = a[i + 1];
+                    a[i + 1] = a[i];
+                    a[i] = temp;
+                }
+            }
+        }
+    }
+
+    public static boolean inOrder(double[] a) {
+        for (int i = 0; i < a.length; i++) {
+            if (a[i] > a[i + 1]) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
