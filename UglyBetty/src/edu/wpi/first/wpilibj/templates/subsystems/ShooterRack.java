@@ -16,7 +16,7 @@ public class ShooterRack {
     private static final Shooter shooterLow = new Shooter(Ports.shooterLow, Ports.shooterLowEncA, Ports.shooterLowEncB);
     private static final Shooter shooterMiddle = new Shooter(Ports.shooterMiddle, Ports.shooterMiddleEncA, Ports.shooterMiddleEncB);
     private static final Shooter shooterHigh = new Shooter(Ports.shooterHigh, Ports.shooterHighEncA, Ports.shooterHighEncB);
-    private static boolean shooting = false, lowWheelEnabled = true;
+    private static boolean shooting = false;
     public static final double shooterDistance = 10; //Random optimum distance from the wall
 
     public static void startShooting() {
@@ -25,14 +25,6 @@ public class ShooterRack {
 
     public static void finishedShooting() {
         shooting = false;
-    }
-
-    public static void enableLowWheel() {
-        lowWheelEnabled = true;
-    }
-
-    public static void disableLowWheel() {
-        lowWheelEnabled = false;
     }
 
     public static void init() {
@@ -47,9 +39,15 @@ public class ShooterRack {
         shooterHigh.readSetpoint();
     }
 
+    public static void setToRecieveRPM() {
+        shooterLow.setSetpoint(200);
+        shooterMiddle.setSetpoint(-300);
+        shooterHigh.setSetpoint(-400);
+    }
+
     public static void setToShootingRPM() {
-        shooterLow.setSetpoint(-1000);
-        shooterMiddle.setSetpoint(2350);
+        shooterLow.setSetpoint(-900);
+        shooterMiddle.setSetpoint(2100);
         shooterHigh.setSetpoint(1900);
     }
 
@@ -60,11 +58,7 @@ public class ShooterRack {
     }
 
     public static void run() {
-        if (lowWheelEnabled) {
-            shooterLow.run();
-        } else {
-            shooterLow.stop();
-        }
+        shooterLow.run();
         shooterMiddle.run();
         shooterHigh.run();
     }

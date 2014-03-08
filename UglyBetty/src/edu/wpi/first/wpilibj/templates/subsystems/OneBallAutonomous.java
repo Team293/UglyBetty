@@ -19,7 +19,7 @@ public class OneBallAutonomous {
     boolean hasFired = false, isTiming = false;
     final Gyro gyro;
     private static final double kStraight = 0.085, kAlign = 0.1;
-    double startDriveTime = 0, stopTime = 3.4, alignTime = 1, driveSpeed = -0.82;
+    double startDriveTime = 0, stopTime = 3.1, alignTime = 1, driveSpeed = -0.82;
     Timer autoTimer;
 
     public OneBallAutonomous() {
@@ -44,17 +44,19 @@ public class OneBallAutonomous {
         Vision.setServo(0.65);
         SmartDashboard.putBoolean("hasFired", hasFired);
         SmartDashboard.putBoolean("possessing", Feeder.possessing());
-        if (!Feeder.possessing() && !hasFired) {
+        if (!Feeder.ballLimit2.get() && !hasFired) {
             SmartDashboard.putString("debugging", "looking for ball...");
             Feeder.triggerEnabled();
             Feeder.feed();
         } else {
+            //mark start of driving/shooting
             if (!isTiming) {
                 isTiming = true;
                 startDriveTime = autoTimer.get();
             }
             Feeder.stop();
             //shooting loop 
+            //t is time for driving
             double t = autoTimer.get() - startDriveTime;
             SmartDashboard.putNumber("time", t);
             if (blobCount == 2 && !hasFired && t >= stopTime) {

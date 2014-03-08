@@ -21,7 +21,8 @@ public class Ports {
             //___gamepad
             toggleFeeder = 1,
             pass = 2,
-            setToHighRPM = 5,
+            recieve = 3,
+            setToHighRPM  = 5,
             setToLowRPM = 6,
             toggleShooter = 8,
             //axes
@@ -54,12 +55,12 @@ public class Ports {
             leftUltrasonic = 3,
             //Digital Outputs
             ultrasonicSignal = 8,
-            led1 = 10,
-            led2 = 11,
             led3 = 12,
             led4 = 13,
             //optical limtis
             ballLimit = 1,
             ballLimit2 = 9,
-            triggerLimit = 10;
+            triggerLimit = 10,
+            //switch
+            autonomousSwitch = 14;
 }

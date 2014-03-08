@@ -5,7 +5,9 @@
  */
 package edu.wpi.first.wpilibj.templates;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.buttons.SpikeButton;
 import edu.wpi.first.wpilibj.templates.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj.templates.subsystems.Feeder;
@@ -27,8 +29,13 @@ public class OperatorInterface {
             toggleDriveDirection = new SpikeButton(rightJoystick, Ports.toggleDriveDirection),
             setToHighRPM = new SpikeButton(gamepad, Ports.setToHighRPM),
             toggleShooters = new SpikeButton(gamepad, Ports.toggleShooter),
-            temp = new SpikeButton(gamepad, 3),
+            recieve = new SpikeButton(gamepad, Ports.recieve),
             setToLowRPM = new SpikeButton(gamepad, Ports.setToLowRPM);
+    private static final DigitalInput autonomousSwitch = new DigitalInput(Ports.autonomousSwitch);
+
+    public static boolean oneBalAutonomous() {
+        return autonomousSwitch.get();
+    }
 
     public static void controlDriveTrain() {
         double leftY = leftJoystick.getY();
@@ -51,13 +58,11 @@ public class OperatorInterface {
         if (toggleShooters.getState()) {
             ShooterRack.run();
         } else {
-
             ShooterRack.stop();
         }
     }
 
     public static void controlFeeder() {
-        ShooterRack.enableLowWheel();
         if (fire.getClick()) {
             ShooterRack.startShooting();
         }
@@ -66,6 +71,17 @@ public class OperatorInterface {
             if (pass.get()) {
                 //pass
                 Feeder.pass();
+            } else if (recieve.getState()) {
+                Feeder.triggerDisabled();
+                ShooterRack.setToRecieveRPM();
+                ShooterRack.run();
+                Feeder.pass();
+                if (Feeder.recieved()){
+                    ShooterRack.setToShootingRPM();
+                    recieve.setState(false);
+                    Feeder.triggerEnabled();
+                    toggleFeeder.setState(true);
+                }
             } else if (toggleFeeder.getState()) {
                 //toggle off
                 if (!Feeder.possessing()) {
