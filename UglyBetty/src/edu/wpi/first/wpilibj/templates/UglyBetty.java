@@ -9,9 +9,11 @@ package edu.wpi.first.wpilibj.templates;
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.templates.subsystems.Cage;
 import edu.wpi.first.wpilibj.templates.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj.templates.subsystems.Feeder;
+import edu.wpi.first.wpilibj.templates.subsystems.OneBallAutonomous;
 import edu.wpi.first.wpilibj.templates.subsystems.ShooterRack;
 import edu.wpi.first.wpilibj.templates.subsystems.TwoBallAutonomous;
 
@@ -25,14 +27,20 @@ import edu.wpi.first.wpilibj.templates.subsystems.TwoBallAutonomous;
 public class UglyBetty extends IterativeRobot {
 
     DriverStationLCD LCD = DriverStationLCD.getInstance();
-    //OneBallAutonomous oneBallAuto = new OneBallAutonomous();
-    TwoBallAutonomous twoBallAuto = new TwoBallAutonomous();
+    OneBallAutonomous oneBallAuto;
+    TwoBallAutonomous twoBallAuto;
 
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
+        SmartDashboard.putBoolean("one ball?", OperatorInterface.oneBalAutonomous());
+//        if (OperatorInterface.oneBalAutonomous()) {
+//            oneBallAuto = new OneBallAutonomous();
+//        } else {
+            twoBallAuto = new TwoBallAutonomous();
+        //}
         ShooterRack.init();
         Feeder.triggerEnabled();
         ShooterRack.setToShootingRPM();
@@ -43,16 +51,22 @@ public class UglyBetty extends IterativeRobot {
     }
 
     public void autonomousInit() {
-        //oneBallAuto.init();
-        twoBallAuto.init();
+//        if (OperatorInterface.oneBalAutonomous()) {
+//            oneBallAuto.init();
+//        } else {
+            twoBallAuto.init();
+        //}
     }
 
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-        //oneBallAuto.run();
-        twoBallAuto.run();
+//        if (OperatorInterface.oneBalAutonomous()) {
+//            oneBallAuto.run();
+//        } else {
+            twoBallAuto.run2();
+        //}
     }
 
     /**
@@ -60,6 +74,7 @@ public class UglyBetty extends IterativeRobot {
      */
     public void teleopPeriodic() {
         //LEDs.indicateSituation();
+        SmartDashboard.putBoolean("one ball?", OperatorInterface.oneBalAutonomous());
         OperatorInterface.controlDriveTrain();
         OperatorInterface.controlShooter();
         OperatorInterface.controlFeeder();
@@ -68,7 +83,6 @@ public class UglyBetty extends IterativeRobot {
         DriveTrain.rangeUltrasonics();
         LCD.println(DriverStationLCD.Line.kUser1, 1, "" + DriveTrain.getLeftDistance());
         LCD.println(DriverStationLCD.Line.kUser2, 1, "" + DriveTrain.getRightDistance());
-
         LCD.updateLCD();
     }
 

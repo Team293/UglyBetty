@@ -28,7 +28,7 @@ public class Shooter {
         output = 0;
         rpm = 0;
         error = 0;
-        kP = -0.000013;
+        kP = -0.000014;
         this.id = ++ID;
     }
 
@@ -59,10 +59,14 @@ public class Shooter {
 
         SmartDashboard.putNumber("rpm" + id, rpm);
         SmartDashboard.putNumber("setpoint" + id, setpoint);
-        SmartDashboard.putString("debuggin", "running " + id + " !!!");
-        //SmartDashboard.putNumber("error" + id, error);
-        //SmartDashboard.putNumber("output" + id, output);
-
+        SmartDashboard.putNumber("error" + id, error);
+        SmartDashboard.putNumber("output" + id, output);
+        if (output < -1) {
+            output = -1;
+        }
+        if (output > 1) {
+            output = 1;
+        }
         talon.set(-output);
     }
 
