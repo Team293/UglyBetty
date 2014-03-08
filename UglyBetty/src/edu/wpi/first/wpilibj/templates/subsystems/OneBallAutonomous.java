@@ -44,17 +44,20 @@ public class OneBallAutonomous {
         Vision.setServo(0.65);
         SmartDashboard.putBoolean("hasFired", hasFired);
         SmartDashboard.putBoolean("possessing", Feeder.possessing());
+        //feed ball
         if (!Feeder.possessing() && !hasFired) {
             SmartDashboard.putString("debugging", "looking for ball...");
             Feeder.triggerEnabled();
             Feeder.feed();
         } else {
+            //mark start of driving/shooting
             if (!isTiming) {
                 isTiming = true;
                 startDriveTime = autoTimer.get();
             }
             Feeder.stop();
             //shooting loop 
+            //t is time for driving
             double t = autoTimer.get() - startDriveTime;
             SmartDashboard.putNumber("time", t);
             if (blobCount == 2 && !hasFired && t >= stopTime) {
