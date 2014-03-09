@@ -25,8 +25,9 @@ public class DriveTrain {
     static final AnalogChannel leftUltrasonic = new AnalogChannel(Ports.leftUltrasonic);
     static final DigitalOutput ultrasonicSignal = new DigitalOutput(Ports.ultrasonicSignal);
     private static double rightDistance, leftDistance;
-    private static int ping = 0, sampleSize = 10;
-    private static double[] val = new double[sampleSize];
+    private static int ping = 0;
+    private static final int sampleSize = 10;
+    private static final double[] val = new double[sampleSize];
 
     public static void tankDrive(double leftMotor, double rightMotor) {
         drive.tankDrive(leftMotor, -rightMotor);
