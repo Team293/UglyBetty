@@ -228,16 +228,16 @@ public class TwoBallAutonomous {
     {   
       ShooterRack.run();
       Feeder.triggerEnabled();
-        while (!Feeder.ballLimit2.get()&&!Feeder.ballLimit.get()) {
+        while (!Feeder.ballLimit2.get()&&!Feeder.ballLimit.get()) {//feed
             Feeder.feed();
             SmartDashboard.putString("debug..", "feeding");
         }
         markTime();
-        while (autoTimer.get() - commandStartTime<stopTime1){
+        while (autoTimer.get() - commandStartTime<stopTime1){//drive foreward
             driveStraight(driveSpeed1);
         }
         markTime();
-        while(Feeder.possessing()){
+        while(Feeder.possessing()){//turn and then shoot first ball
             if (blobCount==2&&autoTimer.get() - commandStartTime<turnTime){
                 turn(turnLeft);
             }
