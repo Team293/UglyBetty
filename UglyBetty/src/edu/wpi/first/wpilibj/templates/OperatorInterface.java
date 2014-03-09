@@ -7,8 +7,8 @@ package edu.wpi.first.wpilibj.templates;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.buttons.SpikeButton;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.templates.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj.templates.subsystems.Feeder;
 import edu.wpi.first.wpilibj.templates.subsystems.ShooterRack;
@@ -49,6 +49,11 @@ public class OperatorInterface {
 
     public static void controlShooter() {
         //read in setpoint from smart dashboard
+//        double lowRPM = SmartDashboard.getNumber("lowRPM", -9000);
+//        double middleRPM = SmartDashboard.getNumber("middleRPM", 2100);
+//        double highRPM = SmartDashboard.getNumber("highRPM", 1900);
+//        ShooterRack.setSetpoints(lowRPM, middleRPM, highRPM);
+
         if (setToHighRPM.get()) {
             ShooterRack.setToShootingRPM();
         } else if (setToLowRPM.get()) {
@@ -76,7 +81,7 @@ public class OperatorInterface {
                 ShooterRack.setToRecieveRPM();
                 ShooterRack.run();
                 Feeder.pass();
-                if (Feeder.recieved()){
+                if (Feeder.recieved()) {
                     ShooterRack.setToShootingRPM();
                     recieve.setState(false);
                     Feeder.triggerEnabled();
@@ -108,7 +113,7 @@ public class OperatorInterface {
         }
     }
 
-    public static void controlAutoAlign() {
+    private static void controlAutoAlign() {
         DriveTrain.rangeUltrasonics();
         DriveTrain.isAligned();
     }
