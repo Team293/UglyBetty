@@ -35,11 +35,13 @@ public class UglyBetty extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-        SmartDashboard.putBoolean("one ball?", OperatorInterface.oneBalAutonomous());
+        SmartDashboard.putNumber("lowRPM", 0);
+        SmartDashboard.putNumber("middleRPM", 0);
+        SmartDashboard.putNumber("highRPM", 0);
 //        if (OperatorInterface.oneBalAutonomous()) {
 //            oneBallAuto = new OneBallAutonomous();
 //        } else {
-            twoBallAuto = new TwoBallAutonomous();
+        twoBallAuto = new TwoBallAutonomous();
         //}
         ShooterRack.init();
         Feeder.triggerEnabled();
@@ -54,7 +56,7 @@ public class UglyBetty extends IterativeRobot {
 //        if (OperatorInterface.oneBalAutonomous()) {
 //            oneBallAuto.init();
 //        } else {
-            twoBallAuto.init();
+        twoBallAuto.init();
         //}
     }
 
@@ -65,7 +67,7 @@ public class UglyBetty extends IterativeRobot {
 //        if (OperatorInterface.oneBalAutonomous()) {
 //            oneBallAuto.run();
 //        } else {
-            twoBallAuto.run2();
+        twoBallAuto.runColdGoal();
         //}
     }
 
@@ -74,13 +76,12 @@ public class UglyBetty extends IterativeRobot {
      */
     public void teleopPeriodic() {
         //LEDs.indicateSituation();
-        SmartDashboard.putBoolean("one ball?", OperatorInterface.oneBalAutonomous());
         OperatorInterface.controlDriveTrain();
         OperatorInterface.controlShooter();
         OperatorInterface.controlFeeder();
-        OperatorInterface.controlAutoAlign();
+        //OperatorInterface.controlAutoAlign();
         OperatorInterface.controlCamera();
-        DriveTrain.rangeUltrasonics();
+        //DriveTrain.rangeUltrasonics();
         LCD.println(DriverStationLCD.Line.kUser1, 1, "" + DriveTrain.getLeftDistance());
         LCD.println(DriverStationLCD.Line.kUser2, 1, "" + DriveTrain.getRightDistance());
         LCD.updateLCD();
