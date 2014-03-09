@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj.templates.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj.templates.subsystems.Feeder;
 import edu.wpi.first.wpilibj.templates.subsystems.OneBallAutonomous;
 import edu.wpi.first.wpilibj.templates.subsystems.ShooterRack;
-import edu.wpi.first.wpilibj.templates.subsystems.TwoBallAutonomous;
+import edu.wpi.first.wpilibj.templates.subsystems.ColdTwoBallAutonomous;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -28,7 +28,7 @@ public class UglyBetty extends IterativeRobot {
 
     DriverStationLCD LCD = DriverStationLCD.getInstance();
     OneBallAutonomous oneBallAuto;
-    TwoBallAutonomous twoBallAuto;
+    ColdTwoBallAutonomous twoBallAuto;
 
     /**
      * This function is run when the robot is first started up and should be
@@ -41,7 +41,7 @@ public class UglyBetty extends IterativeRobot {
 //        if (OperatorInterface.oneBalAutonomous()) {
 //            oneBallAuto = new OneBallAutonomous();
 //        } else {
-        twoBallAuto = new TwoBallAutonomous();
+        twoBallAuto = new ColdTwoBallAutonomous();
         //}
         ShooterRack.init();
         Feeder.triggerEnabled();
