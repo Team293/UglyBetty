@@ -113,11 +113,6 @@ public class OperatorInterface {
         }
     }
 
-    private static void controlAutoAlign() {
-        DriveTrain.rangeUltrasonics();
-        DriveTrain.isAligned();
-    }
-
     public static void controlCamera() {
         //dividing by 4 decreases the range of the cameras motion
         //0.75 centers that motion around a slightly upward angle

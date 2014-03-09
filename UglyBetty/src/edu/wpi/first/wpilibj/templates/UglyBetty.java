@@ -38,11 +38,11 @@ public class UglyBetty extends IterativeRobot {
         SmartDashboard.putNumber("lowRPM", 0);
         SmartDashboard.putNumber("middleRPM", 0);
         SmartDashboard.putNumber("highRPM", 0);
-//        if (OperatorInterface.oneBalAutonomous()) {
-//            oneBallAuto = new OneBallAutonomous();
-//        } else {
-        twoBallAuto = new ColdTwoBallAutonomous();
-        //}
+        if (OperatorInterface.oneBalAutonomous()) {
+            oneBallAuto = new OneBallAutonomous();
+        } else {
+            twoBallAuto = new ColdTwoBallAutonomous();
+        }
         ShooterRack.init();
         Feeder.triggerEnabled();
         ShooterRack.setToShootingRPM();
@@ -53,35 +53,33 @@ public class UglyBetty extends IterativeRobot {
     }
 
     public void autonomousInit() {
-//        if (OperatorInterface.oneBalAutonomous()) {
-//            oneBallAuto.init();
-//        } else {
-        twoBallAuto.init();
-        //}
+        if (OperatorInterface.oneBalAutonomous()) {
+            oneBallAuto.init();
+        } else {
+            twoBallAuto.init();
+        }
     }
 
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-//        if (OperatorInterface.oneBalAutonomous()) {
-//            oneBallAuto.run();
-//        } else {
-        twoBallAuto.runColdGoal();
-        //}
+        if (OperatorInterface.oneBalAutonomous()) {
+            oneBallAuto.run();
+        } else {
+            twoBallAuto.runColdGoal();
+        }
     }
 
     /**
      * This function is called periodically during operator control
      */
     public void teleopPeriodic() {
-        //LEDs.indicateSituation();
         OperatorInterface.controlDriveTrain();
         OperatorInterface.controlShooter();
         OperatorInterface.controlFeeder();
-        //OperatorInterface.controlAutoAlign();
         OperatorInterface.controlCamera();
-        //DriveTrain.rangeUltrasonics();
+        DriveTrain.rangeUltrasonics();
         LCD.println(DriverStationLCD.Line.kUser1, 1, "" + DriveTrain.getLeftDistance());
         LCD.println(DriverStationLCD.Line.kUser2, 1, "" + DriveTrain.getRightDistance());
         LCD.updateLCD();

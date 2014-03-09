@@ -50,71 +50,89 @@ public class HotTwoBallAutonomous {
         hasFired = false;
         isTiming = false;
         Feeder.triggerEnabled();
-
-        blobCount = SmartDashboard.getNumber("blobCount", 0);
     }
 
     public void run() {
-        ShooterRack.run();
+        //check blob count
+        blobCount = SmartDashboard.getNumber("blobCount", 0);
+
+        //enable trigger
         Feeder.triggerEnabled();
-        while (!Feeder.ballLimit2.get() && !Feeder.ballLimit.get()) {//feed
+
+        //feed
+        while (!Feeder.ballLimit2.get() && !Feeder.ballLimit.get()) {
             Feeder.feed();
             SmartDashboard.putString("debug..", "feeding");
         }
         markTime();
-        while (autoTimer.get() - commandStartTime < stopTime1) {//drive foreward
+
+        //drive foreward for stopTime1 at driveSpeed1
+        while (autoTimer.get() - commandStartTime < stopTime1) {
             driveStraight(driveSpeed1);
         }
         markTime();
-        while (Feeder.possessing()) {//turn and then shoot first ball
+
+        //turn and then shoot first ball
+        while (Feeder.possessing()) {
+            ShooterRack.run();
+            //if left goal is hot, turn left
             if (blobCount == 2 && autoTimer.get() - commandStartTime < turnTime) {
                 turn(turnLeft);
-            }
-            if (blobCount == 1 && autoTimer.get() - commandStartTime < turnTime) {
+            } //if left goal is NOT hot, turn right
+            else if (blobCount == 1 && autoTimer.get() - commandStartTime < turnTime) {
                 turn(turnRight);
             } else {
                 SmartDashboard.putString("debug..", "shooting");
-                ShooterRack.run();
                 Feeder.triggerDisabled();
                 Feeder.feed();
             }
             markTime();
         }
+        ShooterRack.stop();
+
+        //turn back to straight
         while (autoTimer.get() - commandStartTime < turnTime) {
             if (blobCount == 1) {
                 turn(turnLeft);
-            }
-            if (blobCount == 2) {
+            } else if (blobCount == 2) {
                 turn(turnRight);
             }
         }
-
         markTime();
+
+        //back up to next ball
+        //why stopTime1-1?????????
         while (autoTimer.get() - commandStartTime < stopTime1 - 1) {
             driveStraight(-driveSpeed1);
             Feeder.triggerEnabled();
-            Feeder.feed();
-            ShooterRack.stop();
         }
+
+        //feed second ball
         while (!Feeder.possessing()) {
             driveStraight(-driveSpeed1 / 2);
             Feeder.feed();
         }
         markTime();
+
+        //drive forward
         while (autoTimer.get() - commandStartTime < stopTime2) {
             ShooterRack.run();
             driveStraight(driveSpeed2);
         }
+
+        //turn and shoot
         while (!Feeder.possessing()) {
+            //if left goal was not hot the first time, turn left this time
             if (blobCount == 1 && autoTimer.get() - commandStartTime < turnTime) {
                 turn(turnLeft);
-            }
-            if (blobCount == 2 && autoTimer.get() - commandStartTime < turnTime) {
+            } //if left goal was hot the first time, turn right this time
+            else if (blobCount == 2 && autoTimer.get() - commandStartTime < turnTime) {
                 turn(turnRight);
+            } else {
+                Feeder.triggerDisabled();
+                Feeder.feed();
+                ShooterRack.run();
             }
-            Feeder.triggerDisabled();
-            Feeder.feed();
-            ShooterRack.run();
         }
 
     }

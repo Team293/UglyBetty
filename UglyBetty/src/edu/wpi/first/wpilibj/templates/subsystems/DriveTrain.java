@@ -24,7 +24,7 @@ public class DriveTrain {
     static final AnalogChannel rightUltrasonic = new AnalogChannel(Ports.rightUltrasonic);
     static final AnalogChannel leftUltrasonic = new AnalogChannel(Ports.leftUltrasonic);
     static final DigitalOutput ultrasonicSignal = new DigitalOutput(Ports.ultrasonicSignal);
-    private static double rightDistance, leftDistance;
+    private static double rightDistance, leftDistance, average;
     private static int ping = 0;
     private static final int sampleSize = 10;
     private static final double[] val = new double[sampleSize];
@@ -54,13 +54,15 @@ public class DriveTrain {
         }
         val[sampleSize - 2] = leftDistance;
         val[sampleSize - 1] = rightDistance;
-
-        sort(val);
-
-        double adjustedDistance = (val[6] + val[7] + val[8] + val[9]) / 4.0;
+        int sum = 0;
+        for (int i = 0; i < val.length; i++) {
+            sum += val[i];
+        }
+        average = sum / val.length;
         SmartDashboard.putNumber("leftD", leftDistance);
         SmartDashboard.putNumber("rightD", rightDistance);
-        SmartDashboard.putNumber("adjustedD", adjustedDistance);
+        SmartDashboard.putNumber("averag", average);
+        isAtShootingDistance();
     }
 
     public static double getLeftDistance() {
@@ -71,14 +73,11 @@ public class DriveTrain {
         return rightDistance;
     }
 
-    public static boolean isAligned() {
-        double difference = leftDistance - rightDistance;
-        double average = (leftDistance + rightDistance) / 2.0;
-        SmartDashboard.putNumber("aligned", difference);
-        SmartDashboard.putNumber("distanced", average);
-        SmartDashboard.putBoolean("aligned", difference < 0.4);
-        SmartDashboard.putBoolean("distanced", Math.abs(average - 12) < 1);
-        return Math.abs(average - 12) < 1 && difference < 0.4;
+    public static boolean isAtShootingDistance() {
+        //returns true if average Ultrasonic distance is between 6 && 8
+        boolean atDistance = Math.abs(average - 7) < 1;
+        SmartDashboard.putBoolean("FIRE", atDistance);
+        return atDistance;
     }
 
     public static void moveToDistance() {
