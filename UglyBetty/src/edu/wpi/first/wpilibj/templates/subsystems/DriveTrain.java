@@ -33,11 +33,8 @@ public class DriveTrain {
         drive.tankDrive(leftMotor, -rightMotor);
     }
 
-    public static void emptyFunction() {
-    }
-
     public static void stop() {
-        drive.tankDrive(0.01, 0.01);
+        drive.tankDrive(0.0, 0.0);
     }
 
     public static void rangeUltrasonics() {
@@ -48,6 +45,7 @@ public class DriveTrain {
         }
         leftDistance = convertToDistance(leftUltrasonic.getAverageVoltage());
         rightDistance = convertToDistance(rightUltrasonic.getAverageVoltage());
+       
         //sensor array stuff
         for (int i = 0; i < val.length - 2; i++) {
             val[i] = val[i + 2];
@@ -78,17 +76,6 @@ public class DriveTrain {
         boolean atDistance = Math.abs(average - 7) < 1;
         SmartDashboard.putBoolean("FIRE", atDistance);
         return atDistance;
-    }
-
-    public static void moveToDistance() {
-        double difference = leftDistance - rightDistance;
-        double average = (leftDistance + rightDistance) / 2.0;
-        SmartDashboard.putNumber("average dstiance", average);
-        if (difference < 5) {
-            drive.tankDrive(0.4, 0.4);
-        } else {
-            drive.tankDrive(0, 0);
-        }
     }
 
     public static double convertToDistance(double rawVoltage) {
