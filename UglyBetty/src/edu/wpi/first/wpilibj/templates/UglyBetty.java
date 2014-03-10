@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.templates.Autonomous.Auto;
 import edu.wpi.first.wpilibj.templates.Autonomous.ColdOneBall;
 import edu.wpi.first.wpilibj.templates.Autonomous.ColdTwoBall;
+import edu.wpi.first.wpilibj.templates.Autonomous.CrossLine;
 import edu.wpi.first.wpilibj.templates.Autonomous.HotOneBall;
 import edu.wpi.first.wpilibj.templates.Autonomous.HotTwoBall;
 import edu.wpi.first.wpilibj.templates.Autonomous.UltrasonicColdOneBall;
@@ -44,14 +45,16 @@ public class UglyBetty extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-        autonomiNames = new String[]{"one ball",
+        autonomiNames = new String[]{"cross line",
+            "one ball",
             "two ball",
             "one ball hot",
             "two ball hot",
             "US one ball",
             "US two ball",
             "US two ball hot"};
-        autonomi = new Auto[]{new ColdOneBall(),
+        autonomi = new Auto[]{new CrossLine(),
+            new ColdOneBall(),
             new ColdTwoBall(),
             new HotOneBall(),
             new HotTwoBall(),
