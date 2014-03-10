@@ -5,7 +5,11 @@
  */
 package edu.wpi.first.wpilibj.templates.Autonomous;
 
+import edu.wpi.first.wpilibj.Gyro;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.templates.Ports;
+import edu.wpi.first.wpilibj.templates.subsystems.Cage;
 import edu.wpi.first.wpilibj.templates.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj.templates.subsystems.Feeder;
 import edu.wpi.first.wpilibj.templates.subsystems.ShooterRack;
@@ -14,17 +18,13 @@ import edu.wpi.first.wpilibj.templates.subsystems.ShooterRack;
  *
  * @author Peter
  */
-public class ColdTwoBallAutonomous extends Auto {
+public class UltrasonicColdTwoBall extends Auto {
 
-    public ColdTwoBallAutonomous() {
+    public UltrasonicColdTwoBall() {
         super();
     }
 
-    public void init() {
-        super.init();
-    }
-
-    public void runColdGoal() {
+    public void run() {
         //feed 1
         Feeder.triggerEnabled();
         while (!Feeder.ballLimit2.get()) {
@@ -32,12 +32,12 @@ public class ColdTwoBallAutonomous extends Auto {
             Feeder.triggerEnabled();
             SmartDashboard.putString("debug..", "feeding");
         }
-        commandStartTime = autoTimer.get();
+        markTime();
         Feeder.stop();
         Feeder.triggerEnabled();
 
         //move forward 1
-        while (autoTimer.get() - commandStartTime < stopTime1) {
+        while (!DriveTrain.isAtShootingDistance()) {
             SmartDashboard.putString("debug..", "driving forward 1");
             Feeder.triggerEnabled();
             driveStraight(driveSpeedForward);
@@ -48,16 +48,7 @@ public class ColdTwoBallAutonomous extends Auto {
                 Feeder.stop();
             }
         }
-        commandStartTime = autoTimer.get();
         Feeder.triggerEnabled();
-
-        //align to straight
-        while (autoTimer.get() - commandStartTime < alignTime) {
-            SmartDashboard.putString("debug..", "aligning");
-            align();
-            ShooterRack.run();
-        }
-        commandStartTime = autoTimer.get();
 
         //shoot
         while (Feeder.possessing()) {
@@ -66,7 +57,6 @@ public class ColdTwoBallAutonomous extends Auto {
             Feeder.triggerDisabled();
             Feeder.feed();
         }
-        commandStartTime = autoTimer.get();
         Feeder.triggerEnabled();
         ShooterRack.stop();
 
@@ -79,11 +69,10 @@ public class ColdTwoBallAutonomous extends Auto {
         }
         DriveTrain.stop();
         Feeder.stop();
-        commandStartTime = autoTimer.get();
 
         //move forward 2
         ShooterRack.setToShootingRPM();
-        while (autoTimer.get() - commandStartTime < stopTime2) {
+        while (!DriveTrain.isAtShootingDistance()) {
             SmartDashboard.putString("debug..", "move forward 2");
             driveStraight(driveSpeedForward);
             ShooterRack.run();
@@ -93,7 +82,6 @@ public class ColdTwoBallAutonomous extends Auto {
                 Feeder.stop();
             }
         }
-        commandStartTime = autoTimer.get();
         DriveTrain.stop();
         //shoot
         while (Feeder.possessing()) {

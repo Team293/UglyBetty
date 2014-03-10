@@ -14,9 +14,9 @@ import edu.wpi.first.wpilibj.templates.subsystems.ShooterRack;
  *
  * @author Peter
  */
-public class UltrasonicHotTwoBallAutonomous extends Auto {
+public class UltrasonicHotTwoBall extends Auto {
 
-    public UltrasonicHotTwoBallAutonomous() {
+    public UltrasonicHotTwoBall() {
         super();
     }
 

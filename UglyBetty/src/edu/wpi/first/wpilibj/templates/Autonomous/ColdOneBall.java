@@ -14,9 +14,9 @@ import edu.wpi.first.wpilibj.templates.subsystems.ShooterRack;
  *
  * @author Peter
  */
-public class ColdOneBallAutonomous extends Auto {
+public class ColdOneBall extends Auto {
 
-    public ColdOneBallAutonomous() {
+    public ColdOneBall() {
         super();
     }
 
@@ -24,7 +24,7 @@ public class ColdOneBallAutonomous extends Auto {
         super.init();
     }
 
-    public void runColdGoal() {
+    public void run() {
         //fee
         Feeder.triggerEnabled();
         while (!Feeder.ballLimit2.get()) {

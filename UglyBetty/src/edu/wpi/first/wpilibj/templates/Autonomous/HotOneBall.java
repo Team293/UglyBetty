@@ -15,9 +15,9 @@ import edu.wpi.first.wpilibj.templates.subsystems.Vision;
  *
  * @author Peter
  */
-public class HotOneBallAutonomous extends Auto {
+public class HotOneBall extends Auto {
 
-    public HotOneBallAutonomous() {
+    public HotOneBall() {
         super();
     }
 

@@ -9,12 +9,20 @@ package edu.wpi.first.wpilibj.templates;
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.templates.Autonomous.Auto;
+import edu.wpi.first.wpilibj.templates.Autonomous.ColdOneBall;
+import edu.wpi.first.wpilibj.templates.Autonomous.ColdTwoBall;
+import edu.wpi.first.wpilibj.templates.Autonomous.HotOneBall;
+import edu.wpi.first.wpilibj.templates.Autonomous.HotTwoBall;
+import edu.wpi.first.wpilibj.templates.Autonomous.UltrasonicColdOneBall;
+import edu.wpi.first.wpilibj.templates.Autonomous.UltrasonicColdTwoBall;
+import edu.wpi.first.wpilibj.templates.Autonomous.UltrasonicHotTwoBall;
 import edu.wpi.first.wpilibj.templates.subsystems.Cage;
 import edu.wpi.first.wpilibj.templates.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj.templates.subsystems.Feeder;
 import edu.wpi.first.wpilibj.templates.subsystems.ShooterRack;
-import edu.wpi.first.wpilibj.templates.Autonomous.ColdTwoBallAutonomous;
-import edu.wpi.first.wpilibj.templates.Autonomous.HotOneBallAutonomous;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -26,13 +34,35 @@ import edu.wpi.first.wpilibj.templates.Autonomous.HotOneBallAutonomous;
 public class UglyBetty extends IterativeRobot {
 
     DriverStationLCD LCD = DriverStationLCD.getInstance();
-    //AUTONOMOUS?!?!?!
+    SendableChooser chooser = new SendableChooser();
+    String[] autonomiNames;
+    Auto[] autonomi;
+    Auto selectedAuto;
 
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
+        autonomiNames = new String[]{"one ball",
+            "two ball",
+            "one ball hot",
+            "two ball hot",
+            "US one ball",
+            "US two ball",
+            "US two ball hot"};
+        autonomi = new Auto[]{new ColdOneBall(),
+            new ColdTwoBall(),
+            new HotOneBall(),
+            new HotTwoBall(),
+            new UltrasonicColdOneBall(),
+            new UltrasonicColdTwoBall(),
+            new UltrasonicHotTwoBall()};
+        for (int i = 0; i < autonomiNames.length; ++i) {
+            chooser.addObject(autonomiNames[i], autonomi[i]);
+        }
+        SmartDashboard.putData("Which Autonomouse?", chooser);
+
         ShooterRack.init();
         Feeder.triggerEnabled();
         ShooterRack.setToShootingRPM();
@@ -43,12 +73,15 @@ public class UglyBetty extends IterativeRobot {
     }
 
     public void autonomousInit() {
+        selectedAuto = (Auto) chooser.getSelected();
+        selectedAuto.init();
     }
 
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
+        selectedAuto.run();
     }
 
     /**

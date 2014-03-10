@@ -49,6 +49,9 @@ public class Auto {
         Feeder.triggerEnabled();
     }
 
+    public void run() {
+    }
+
     public void align() {
         double angle = gyro.getAngle();
         //calculate motor output

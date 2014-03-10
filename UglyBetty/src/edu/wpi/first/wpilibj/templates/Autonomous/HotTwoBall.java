@@ -13,9 +13,9 @@ import edu.wpi.first.wpilibj.templates.subsystems.ShooterRack;
  *
  * @author Peter
  */
-public class HotTwoBallAutonomous extends Auto {
+public class HotTwoBall extends Auto {
 
-    public HotTwoBallAutonomous() {
+    public HotTwoBall() {
         super();
     }
 
