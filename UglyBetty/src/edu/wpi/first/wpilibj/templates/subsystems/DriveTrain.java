@@ -95,7 +95,7 @@ public class DriveTrain {
         return (rawVoltage + 0.0056) / 0.1141;
     }
 
-    public static void sort(double[] a) {
+    private static void sort(double[] a) {
         while (!inOrder(a)) {
             for (int i = 0; i < a.length; i++) {
                 //if in wrong order, flip
@@ -108,7 +108,7 @@ public class DriveTrain {
         }
     }
 
-    public static boolean inOrder(double[] a) {
+    private static boolean inOrder(double[] a) {
         for (int i = 0; i < a.length; i++) {
             if (a[i] > a[i + 1]) {
                 return false;
