@@ -9,13 +9,12 @@ package edu.wpi.first.wpilibj.templates;
 import edu.wpi.first.wpilibj.DriverStationLCD;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.templates.subsystems.Cage;
 import edu.wpi.first.wpilibj.templates.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj.templates.subsystems.Feeder;
-import edu.wpi.first.wpilibj.Autonomous.OneBallAutonomous;
 import edu.wpi.first.wpilibj.templates.subsystems.ShooterRack;
-import edu.wpi.first.wpilibj.Autonomous.ColdTwoBallAutonomous;
+import edu.wpi.first.wpilibj.templates.Autonomous.ColdTwoBallAutonomous;
+import edu.wpi.first.wpilibj.templates.Autonomous.HotOneBallAutonomous;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -27,22 +26,13 @@ import edu.wpi.first.wpilibj.Autonomous.ColdTwoBallAutonomous;
 public class UglyBetty extends IterativeRobot {
 
     DriverStationLCD LCD = DriverStationLCD.getInstance();
-    OneBallAutonomous oneBallAuto;
-    ColdTwoBallAutonomous twoBallAuto;
+    //AUTONOMOUS?!?!?!
 
     /**
      * This function is run when the robot is first started up and should be
      * used for any initialization code.
      */
     public void robotInit() {
-        SmartDashboard.putNumber("lowRPM", 0);
-        SmartDashboard.putNumber("middleRPM", 0);
-        SmartDashboard.putNumber("highRPM", 0);
-        if (OperatorInterface.oneBalAutonomous()) {
-            oneBallAuto = new OneBallAutonomous();
-        } else {
-            twoBallAuto = new ColdTwoBallAutonomous();
-        }
         ShooterRack.init();
         Feeder.triggerEnabled();
         ShooterRack.setToShootingRPM();
@@ -53,22 +43,12 @@ public class UglyBetty extends IterativeRobot {
     }
 
     public void autonomousInit() {
-        if (OperatorInterface.oneBalAutonomous()) {
-            oneBallAuto.init();
-        } else {
-            twoBallAuto.init();
-        }
     }
 
     /**
      * This function is called periodically during autonomous
      */
     public void autonomousPeriodic() {
-        if (OperatorInterface.oneBalAutonomous()) {
-            oneBallAuto.run();
-        } else {
-            twoBallAuto.runColdGoal();
-        }
     }
 
     /**
@@ -91,4 +71,19 @@ public class UglyBetty extends IterativeRobot {
     public void testPeriodic() {
         LiveWindow.run();
     }
+
+    public void teleopDisabled() {
+        DriveTrain.stop();
+        Feeder.stop();
+        ShooterRack.stop();
+        Cage.reset();
+    }
+
+    public void autonomousDisabled() {
+        DriveTrain.stop();
+        Feeder.stop();
+        ShooterRack.stop();
+        Cage.reset();
+    }
+
 }

@@ -55,7 +55,7 @@ public class Feeder {
     public static boolean recieved() {
         boolean recieved = lastPossessState && !possessing();
         lastPossessState = possessing();
-        SmartDashboard.putBoolean("recieved ",recieved);
+        SmartDashboard.putBoolean("recieved ", recieved);
         return recieved;
     }
 }

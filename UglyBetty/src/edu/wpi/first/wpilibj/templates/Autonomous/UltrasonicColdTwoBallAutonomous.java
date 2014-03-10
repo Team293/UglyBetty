@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.wpi.first.wpilibj.Autonomous;
+package edu.wpi.first.wpilibj.templates.Autonomous;
 
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Timer;
@@ -18,31 +18,10 @@ import edu.wpi.first.wpilibj.templates.subsystems.ShooterRack;
  *
  * @author Peter
  */
-public class UltrasonicColdTwoBallAutonomous {
-
-    boolean hasFired = false, isTiming = false, firingFirst = false;
-    final Gyro gyro;
-    private static final double kStraight = 0.082,
-            searchTime = 3,
-            driveSpeedForward = -0.72,
-            driveSpeedReverse = 0.64;
-
-    double commandStartTime = 0;
-    Timer autoTimer;
+public class UltrasonicColdTwoBallAutonomous extends Auto {
 
     public UltrasonicColdTwoBallAutonomous() {
-        gyro = new Gyro(Ports.gyro);
-        autoTimer = new Timer();
-    }
-
-    public void init() {
-        autoTimer.start();
-        Cage.release();
-        gyro.reset();
-        ShooterRack.finishedShooting();
-        hasFired = false;
-        isTiming = false;
-        Feeder.triggerEnabled();
+        super();
     }
 
     public void runColdGoal() {
@@ -113,33 +92,6 @@ public class UltrasonicColdTwoBallAutonomous {
         }
         Feeder.triggerEnabled();
         ShooterRack.stop();
-    }
-
-    public void driveStraight(double speed) {
-        //read the gyro
-        double angle = gyro.getAngle();
-        //calculate motor output
-        SmartDashboard.putNumber("gyro", angle);
-        double rightMotorOutput = speed - kStraight * angle;
-        double leftMotorOutput = speed + kStraight * angle;
-        if (rightMotorOutput > 1) {
-            rightMotorOutput = 1;
-        }
-        if (leftMotorOutput > 1) {
-            leftMotorOutput = 1;
-        }
-        if (rightMotorOutput < -1) {
-            rightMotorOutput = -1;
-        }
-        if (leftMotorOutput < -1) {
-            leftMotorOutput = -1;
-        }
-        //set motor output
-        DriveTrain.tankDrive(-leftMotorOutput, -rightMotorOutput);
-    }
-
-    public void markTime() {
-        commandStartTime = autoTimer.get();
     }
 
 }

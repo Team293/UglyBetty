@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.wpi.first.wpilibj.Autonomous;
+package edu.wpi.first.wpilibj.templates.Autonomous;
 
 import edu.wpi.first.wpilibj.Gyro;
 import edu.wpi.first.wpilibj.Timer;
@@ -18,15 +18,25 @@ import edu.wpi.first.wpilibj.templates.subsystems.ShooterRack;
  *
  * @author Peter
  */
-public class UltrasonicOneBallAutonomous {
+public class Auto {
 
-    boolean hasFired = false, isTiming = false;
     final Gyro gyro;
-    private static final double kStraight = 0.085, kAlign = 0.1;
-    double startDriveTime = 0, stopDistance = 7, alignTime = 1, driveSpeed = -0.82;
+    static final double kStraight = 0.082, kAlign = 0.089;
+    double alignTime = 0.5,
+            stopTime1 = 2.35,
+            stopTime2 = 2.70,
+            searchTime = 2.90,
+            quickBack1 = 0.85,
+            driveSpeedForward = -0.69,
+            driveSpeedReverse = 0.64,
+            turnLeft = 20,
+            blobCount = 0,
+            turnTime = 0.75,
+            turnRight = (-turnLeft);
+    double commandStartTime = 0;
     Timer autoTimer;
 
-    public UltrasonicOneBallAutonomous() {
+    public Auto() {
         gyro = new Gyro(Ports.gyro);
         autoTimer = new Timer();
     }
@@ -36,42 +46,7 @@ public class UltrasonicOneBallAutonomous {
         Cage.release();
         gyro.reset();
         ShooterRack.finishedShooting();
-        hasFired = false;
-        isTiming = false;
-    }
-
-    public void run() {
-        double blobCount = SmartDashboard.getNumber("blobCount", 0);
-        ShooterRack.setToShootingRPM();
-        DriveTrain.rangeUltrasonics();
         Feeder.triggerEnabled();
-        //feed in ball
-        while (!Feeder.possessing()) {
-            Feeder.feed();
-        }
-        Feeder.stop();
-
-        //move forward until at shooting Distance
-        while (!DriveTrain.isAtShootingDistance()) {
-            DriveTrain.rangeUltrasonics();
-            driveStraight(driveSpeed);
-            //make sure you have a ball
-            if (!Feeder.possessing()) {
-                Feeder.feed();
-            } else {
-                Feeder.stop();
-            }
-            //spin up shooter wheels
-            ShooterRack.run();
-        }
-        //FIRE!!!
-        while (Feeder.possessing()) {
-            ShooterRack.run();
-            Feeder.triggerDisabled();
-            Feeder.feed();
-        }
-        ShooterRack.stop();
-        DriveTrain.stop();
     }
 
     public void align() {
@@ -82,8 +57,23 @@ public class UltrasonicOneBallAutonomous {
         if (turnOutput > 1) {
             turnOutput = 1;
         }
+        if (turnOutput < -1) {
+            turnOutput = -1;
+        }
+        DriveTrain.tankDrive(-turnOutput, turnOutput);
+    }
+
+    public void turn(double turnAngle) {
+        double angle = gyro.getAngle();
+        //calculate motor output
+        angle = angle - turnAngle;
+        SmartDashboard.putNumber("gyro", angle);
+        double turnOutput = kAlign * angle;
         if (turnOutput > 1) {
             turnOutput = 1;
+        }
+        if (turnOutput < -1) {
+            turnOutput = -1;
         }
         DriveTrain.tankDrive(-turnOutput, turnOutput);
     }
@@ -109,6 +99,10 @@ public class UltrasonicOneBallAutonomous {
         }
         //set motor output
         DriveTrain.tankDrive(-leftMotorOutput, -rightMotorOutput);
+    }
+
+    public void markTime() {
+        commandStartTime = autoTimer.get();
     }
 
 }
