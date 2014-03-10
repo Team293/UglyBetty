@@ -13,9 +13,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.templates.subsystems.Cage;
 import edu.wpi.first.wpilibj.templates.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj.templates.subsystems.Feeder;
-import edu.wpi.first.wpilibj.templates.subsystems.OneBallAutonomous;
+import edu.wpi.first.wpilibj.Autonomous.OneBallAutonomous;
 import edu.wpi.first.wpilibj.templates.subsystems.ShooterRack;
-import edu.wpi.first.wpilibj.templates.subsystems.ColdTwoBallAutonomous;
+import edu.wpi.first.wpilibj.Autonomous.ColdTwoBallAutonomous;
 
 /**
  * The VM is configured to automatically run this class, and to call the
