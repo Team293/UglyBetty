@@ -20,9 +20,9 @@ import edu.wpi.first.wpilibj.templates.subsystems.ShooterRack;
  */
 public class Auto {
 
-    final Gyro gyro = new Gyro(Ports.gyro);
-    static final double kStraight = 0.082, kAlign = 0.089;
-    double alignTime = 0.5,
+    private static final Gyro gyro = new Gyro(Ports.gyro);
+    final double kStraight = 0.082, kAlign = 0.089;
+    final double alignTime = 0.5,
             stopTime1 = 2.35,
             stopTime2 = 2.70,
             searchTime = 2.90,
@@ -30,9 +30,9 @@ public class Auto {
             driveSpeedForward = -0.69,
             driveSpeedReverse = 0.64,
             turnLeft = 20,
-            blobCount = 0,
             turnTime = 0.75,
             turnRight = (-turnLeft);
+    double blobCount = 0;
     double commandStartTime = 0;
     Timer autoTimer = new Timer();
 
