@@ -35,7 +35,7 @@ public class UglyBetty extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
-        SmartDashboard.putBoolean("one ball?", OperatorInterface.oneBalAutonomous());
+        LiveWindow.addSensor("autoSwitch", "one ball?", OperatorInterface.autonomousSwitch);
 //        if (OperatorInterface.oneBalAutonomous()) {
 //            oneBallAuto = new OneBallAutonomous();
 //        } else {

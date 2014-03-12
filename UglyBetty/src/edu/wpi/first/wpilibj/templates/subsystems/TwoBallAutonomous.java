@@ -16,7 +16,7 @@ import edu.wpi.first.wpilibj.templates.Ports;
  */
 public class TwoBallAutonomous {
 
-    boolean hasFired = false, isTiming = false, firingFirst=false;
+    boolean hasFired = false, isTiming = false, firingFirst = false;
     final Gyro gyro;
     private static final double kStraight = 0.085, kAlign = 0.089;
     double startDriveTime = 0,
@@ -25,6 +25,7 @@ public class TwoBallAutonomous {
             stopTime2 = 2.8,
             searchTime = 2.6,
             driveSpeed1 = -0.65,
+            quickBack1 = 0.85,
             driveSpeed2 = 0.45;
     double commandStartTime = 0;
     int runCount = 1;
@@ -133,115 +134,95 @@ public class TwoBallAutonomous {
         ShooterRack.stop();
     }
 
-    public void run1() {
-        DriveTrain.rangeUltrasonics();
-        ShooterRack.run();
-        //feed ball
-        if (!Feeder.possessing() && !hasFired && (runCount == 1 || runCount == 2)) {
-            SmartDashboard.putString("debugging", "looking for ball...");
-            Feeder.triggerEnabled();
-            Feeder.feed();
-        } else if (Feeder.possessing()) {
-            //stop feeder on possession
-            Feeder.stop();
-            startDriveTime = autoTimer.get();
-            if (!isTiming) {
-                isTiming = true;
-
+    public void run3() {
+        double blobCount = SmartDashboard.getNumber("blobCount", 0);
+        commandStartTime = autoTimer.get();
+        if (blobCount == 1 && (autoTimer.get() - commandStartTime) < 5) {//if we are not starting in a hot goal
+            if (firingFirst == true) {
+                firingFirst = false;
             }
-
-            if (!hasFired &&) {
-
+            while (!Feeder.ballLimit2.get() || !Feeder.ballLimit.get()) {
+                Feeder.feed();
+                ShooterRack.run();
+            }
+            commandStartTime = autoTimer.get();
+            while (autoTimer.get() - commandStartTime < stopTime2) {
+                driveStraight(driveSpeed1);
             }
         }
-    }
-     public void run3(){
-  double blobCount = SmartDashboard.getNumber("blobCount", 0); 
-  commandStartTime=autoTimer.get();
-if (blobCount==1 && (autoTimer.get()-commandStartTime)<5){//if we are not starting in a hot goal
-    if(firingFirst==true){
-      firingFirst=false;  
-    }
-    while(!Feeder.ballLimit2.get()||!Feeder.ballLimit.get()){
-            Feeder.feed(); 
+        if (blobCount == 2 && (autoTimer.get() - commandStartTime) < 5) {//we are starting in hot goal
+            firingFirst = true;
             ShooterRack.run();
-}
-    commandStartTime=autoTimer.get();
-    while(autoTimer.get()-commandStartTime<stopTime2){
-     driveStraight(driveSpeed1);
-    }
-}
-if (blobCount==2 && (autoTimer.get()-commandStartTime)<5)   {//we are starting in hot goal
-    firingFirst=true;
-    ShooterRack.run();
-    while(!Feeder.ballLimit2.get()||!Feeder.ballLimit.get()){
-        Feeder.feed();  
-    }
-    commandStartTime=autoTimer.get();
-    while(autoTimer.get()-commandStartTime<stopTime1){
-        driveStraight(driveSpeed1);
-    }
-    commandStartTime=autoTimer.get();
-       while (Feeder.possessing()) {
-            Feeder.triggerDisabled();
-            Feeder.feed();
+            while (!Feeder.ballLimit2.get() || !Feeder.ballLimit.get()) {
+                Feeder.feed();
+            }
+            commandStartTime = autoTimer.get();
+            while (autoTimer.get() - commandStartTime < stopTime1) {
+                driveStraight(driveSpeed1);
+            }
+            commandStartTime = autoTimer.get();
+            while (Feeder.possessing()) {
+                Feeder.triggerDisabled();
+                Feeder.feed();
+            }
+            commandStartTime = autoTimer.get();
+            while (autoTimer.get() - commandStartTime < stopTime1) {
+                driveFast(quickBack1);
+                Feeder.feed();
+            }
+            while (!Feeder.ballLimit2.get() || !Feeder.ballLimit.get()) {
+                Feeder.feed();
+            }
+            commandStartTime = autoTimer.get();
+            while (autoTimer.get() - commandStartTime < 2) {
+                driveFast(quickBack1);
+            }
+            while (Feeder.possessing()) {
+                Feeder.triggerDisabled();
+                Feeder.feed();
+            }
         }
-    commandStartTime=autoTimer.get();
-    while(autoTimer.get()-commandStartTime<stopTime1){
-     driveFast(quickBack1); 
-     Feeder.feed(); 
-    }
-    while(!Feeder.ballLimit2.get()||!Feeder.ballLimit.get()){
-        Feeder.feed();  
-    }
-    commandStartTime=autoTimer.get();
-    while(autoTimer.get()-commandStartTime<2){
-        driveFast(quickBack1);
-}
-     while (Feeder.possessing()) {
-            Feeder.triggerDisabled();
-            Feeder.feed();
-        }
-}
-    
 
-if (blobCount==1 && (autoTimer.get()-commandStartTime)>=5 && firingFirst==true ){//we have hopefully fired twice.
+        if (blobCount == 1 && (autoTimer.get() - commandStartTime) >= 5 && firingFirst == true) {//we have hopefully fired twice.
 //this is a problem if we didn't finish shooting the second ball within 5 seconds
-    //probably should make a variable to see if we sucessfully shot two balls or not.
-    while (Feeder.possessing()) {
-            Feeder.triggerDisabled();
-            Feeder.feed();
+            //probably should make a variable to see if we sucessfully shot two balls or not.
+            while (Feeder.possessing()) {
+                Feeder.triggerDisabled();
+                Feeder.feed();
+            }
         }
-}
-if(blobCount==2 && (autoTimer.get()-commandStartTime)>=5 && firingFirst==false ){//time to fire off the two balls
-   while (Feeder.possessing()) {
-            Feeder.triggerDisabled();
-            Feeder.feed();
-        }
-           
-    commandStartTime=autoTimer.get();
-    while(autoTimer.get()-commandStartTime<stopTime1){
-     driveFast(quickBack1); 
-     Feeder.feed(); 
-    }
-    while(!Feeder.ballLimit2.get()||!Feeder.ballLimit.get()){
-        Feeder.feed();  
-    }
-    commandStartTime=autoTimer.get();
-    while(autoTimer.get()-commandStartTime<2){
-        driveFast(quickBack1);
-}
-     while (Feeder.possessing()) {
-            Feeder.triggerDisabled();
-            Feeder.feed();
-        }
-   commandStartTime=autoTimer.get();
-}
-else{
-//camera not working  PANIC!! or run the nonhotgoal two ball autonomous?????
-}    
+        if (blobCount == 2 && (autoTimer.get() - commandStartTime) >= 5 && firingFirst == false) {//time to fire off the two balls
+            while (Feeder.possessing()) {
+                Feeder.triggerDisabled();
+                Feeder.feed();
+            }
 
-     }
+            commandStartTime = autoTimer.get();
+            while (autoTimer.get() - commandStartTime < stopTime1) {
+                driveFast(quickBack1);
+                Feeder.feed();
+            }
+            while (!Feeder.ballLimit2.get() || !Feeder.ballLimit.get()) {
+                Feeder.feed();
+            }
+            commandStartTime = autoTimer.get();
+            while (autoTimer.get() - commandStartTime < 2) {
+                driveFast(quickBack1);
+            }
+            while (Feeder.possessing()) {
+                Feeder.triggerDisabled();
+                Feeder.feed();
+            }
+            commandStartTime = autoTimer.get();
+        } else {
+//camera not working  PANIC!! or run the nonhotgoal two ball autonomous?????
+        }
+
+    }
+    
+    public void run4(){
+        
+    }
 
     public void align() {
         double angle = gyro.getAngle();
@@ -279,10 +260,10 @@ else{
         //set motor output
         DriveTrain.tankDrive(-leftMotorOutput, -rightMotorOutput);
     }
-    public void driveFast(double speed){
-      DriveTrain.tankDrive(speed,speed);
-      
-        
+
+    public void driveFast(double speed) {
+        DriveTrain.tankDrive(speed, speed);
+
     }
 
 }

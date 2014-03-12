@@ -31,7 +31,7 @@ public class OperatorInterface {
             toggleShooters = new SpikeButton(gamepad, Ports.toggleShooter),
             recieve = new SpikeButton(gamepad, Ports.recieve),
             setToLowRPM = new SpikeButton(gamepad, Ports.setToLowRPM);
-    private static final DigitalInput autonomousSwitch = new DigitalInput(Ports.autonomousSwitch);
+    public static final DigitalInput autonomousSwitch = new DigitalInput(Ports.autonomousSwitch);
 
     public static boolean oneBalAutonomous() {
         return autonomousSwitch.get();
@@ -76,7 +76,7 @@ public class OperatorInterface {
                 ShooterRack.setToRecieveRPM();
                 ShooterRack.run();
                 Feeder.pass();
-                if (Feeder.recieved()){
+                if (Feeder.recieved()) {
                     ShooterRack.setToShootingRPM();
                     recieve.setState(false);
                     Feeder.triggerEnabled();
