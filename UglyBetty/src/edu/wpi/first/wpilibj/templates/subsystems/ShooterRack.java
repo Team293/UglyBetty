@@ -33,14 +33,14 @@ public class ShooterRack {
         shooterHigh.init();
     }
 
-    private static void readSetpoints() {
-        shooterLow.readSetpoint();
-        shooterMiddle.readSetpoint();
-        shooterHigh.readSetpoint();
+    public static void setSetpoints(double lowRPM, double middleRPM, double highRPM) {
+        shooterLow.setSetpoint(lowRPM);
+        shooterMiddle.setSetpoint(middleRPM);
+        shooterHigh.setSetpoint(highRPM);
     }
 
     public static void setToRecieveRPM() {
-        shooterLow.setSetpoint(200);
+        shooterLow.setSetpoint(300);
         shooterMiddle.setSetpoint(-300);
         shooterHigh.setSetpoint(-400);
     }

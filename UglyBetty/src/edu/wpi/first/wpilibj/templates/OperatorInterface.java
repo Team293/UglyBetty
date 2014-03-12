@@ -5,9 +5,7 @@
  */
 package edu.wpi.first.wpilibj.templates;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.buttons.SpikeButton;
 import edu.wpi.first.wpilibj.templates.subsystems.DriveTrain;
 import edu.wpi.first.wpilibj.templates.subsystems.Feeder;
@@ -31,6 +29,7 @@ public class OperatorInterface {
             toggleShooters = new SpikeButton(gamepad, Ports.toggleShooter),
             recieve = new SpikeButton(gamepad, Ports.recieve),
             setToLowRPM = new SpikeButton(gamepad, Ports.setToLowRPM);
+
     public static final DigitalInput autonomousSwitch = new DigitalInput(Ports.autonomousSwitch);
 
     public static boolean oneBalAutonomous() {
@@ -48,7 +47,6 @@ public class OperatorInterface {
     }
 
     public static void controlShooter() {
-        //read in setpoint from smart dashboard
         if (setToHighRPM.get()) {
             ShooterRack.setToShootingRPM();
         } else if (setToLowRPM.get()) {
@@ -106,11 +104,6 @@ public class OperatorInterface {
                 Feeder.triggerEnabled();
             }
         }
-    }
-
-    public static void controlAutoAlign() {
-        DriveTrain.rangeUltrasonics();
-        DriveTrain.isAligned();
     }
 
     public static void controlCamera() {
