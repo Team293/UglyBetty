@@ -45,6 +45,7 @@ public class UglyBetty extends IterativeRobot {
      * used for any initialization code.
      */
     public void robotInit() {
+
         autonomiNames = new String[]{"cross line",
             "one ball",
             "two ball",

@@ -30,6 +30,12 @@ public class OperatorInterface {
             recieve = new SpikeButton(gamepad, Ports.recieve),
             setToLowRPM = new SpikeButton(gamepad, Ports.setToLowRPM);
 
+    public static final DigitalInput autonomousSwitch = new DigitalInput(Ports.autonomousSwitch);
+
+    public static boolean oneBalAutonomous() {
+        return autonomousSwitch.get();
+    }
+
     public static void controlDriveTrain() {
         double leftY = leftJoystick.getY();
         double rightY = rightJoystick.getY();

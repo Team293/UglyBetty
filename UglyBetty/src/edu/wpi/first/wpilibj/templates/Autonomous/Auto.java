@@ -30,9 +30,9 @@ public class Auto {
             driveSpeedForward = -0.69,
             driveSpeedReverse = 0.64,
             turnLeft = 20,
-            blobCount = 0,
             turnTime = 0.75,
             turnRight = (-turnLeft);
+    double blobCount = 0;
     double commandStartTime = 0;
     Timer autoTimer = new Timer();
 
