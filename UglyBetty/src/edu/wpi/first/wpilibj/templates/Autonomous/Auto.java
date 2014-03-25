@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.templates.subsystems.ShooterRack;
  */
 public class Auto {
 
-    final Gyro gyro = new Gyro(Ports.gyro);
+    static final Gyro gyro = new Gyro(Ports.gyro);
     static final double kStraight = 0.082, kAlign = 0.089;
     double alignTime = 0.5,
             stopTime1 = 2.35,
